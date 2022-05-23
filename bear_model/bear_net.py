@@ -1,5 +1,6 @@
 import tensorflow.compat.v2 as tf
 from . import core
+from tqdm import tqdm
 
 epsilon = tf.keras.backend.epsilon()
 
@@ -293,7 +294,7 @@ def train(data, num_kmers, epochs, ds_loc, alphabet, lag, make_ar_func, af_kwarg
     # Training loop
     loss = 0.
     step = 1
-    for batch in data_iter:
+    for batch in tqdm(data_iter):
         # Accumulate gradients and update loss.
         loss += dist_train_step(batch, num_kmers, h_signed, ar_func,
                                 params, acc_grads, train_ar)

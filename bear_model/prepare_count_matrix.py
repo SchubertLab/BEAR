@@ -8,6 +8,7 @@ from time import time
 from collections import OrderedDict
 import argparse
 import os
+import platform
 
 
 parser = argparse.ArgumentParser()
@@ -73,7 +74,10 @@ for lag in tqdm(range(1, lags)):
 	for ngram_, trans_mat in zip(ngrams_unified, transition_matrices):
 		f.write(ngram_ + '\t' + str(trans_mat) + '\n')
 	f.close()
-
-	if 'BEAR/bear_model' not in os.getcwd():
+	print(os.getcwd())
+	if 'bear_model' not in os.getcwd():
 		os.chdir('bear_model')
-	os.system(f'gshuf data/{dataset}_transition_count_lag_{lag}.tsv -o data/{dataset}_transition_count_lag_{lag}_shuf.tsv')
+	if platform.system() == 'Linux':
+		os.system(f'shuf data/{dataset}_transition_count_lag_{lag}.tsv -o data/{dataset}_transition_count_lag_{lag}_shuf.tsv')
+	elif platform.system() == 'Darwin':
+		os.system(f'gshuf data/{dataset}_transition_count_lag_{lag}.tsv -o data/{dataset}_transition_count_lag_{lag}_shuf.tsv')

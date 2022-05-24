@@ -200,7 +200,7 @@ def _train_step(batch, num_kmers, h_signed, ar_func,
 
 def train(data, num_kmers, epochs, ds_loc, alphabet, lag, make_ar_func, af_kwargs,
           learning_rate, optimizer_name, train_ar, acc_steps=1,
-          params_restart=None, writer=None, loss_save=None, dtype=tf.float64):
+          params_restart=None, writer=None, loss_save=None, dtype=tf.float64, experiment=None):
     """Train a BEAR or AR model using all available GPUs in parallel.
 
     Parameters
@@ -301,6 +301,8 @@ def train(data, num_kmers, epochs, ds_loc, alphabet, lag, make_ar_func, af_kwarg
 
         if step % acc_steps == 0:
             # Record loss
+            if experiment is not None:
+                experiment.log_metric('elbo', - loss / acc_steps, step=step)
             if writer is not None:
                 with writer.as_default():
                     tf.summary.scalar('elbo', - loss / acc_steps, step=step)

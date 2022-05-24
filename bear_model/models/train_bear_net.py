@@ -7,6 +7,7 @@ Example config files, with descriptions of the input parameters, can be found
 in the subfolder ``bear_model/models/config_files`` (`bear_lin_bear.cfg`, `bear_lin_ar.cfg`,
 `bear_cnn_bear.cfg`, and `bear_cnn_ar.cfg`).
 """
+from comet_ml import Experiment
 import argparse
 import configparser
 import tensorflow.compat.v2 as tf
@@ -28,6 +29,9 @@ from pkg_resources import resource_filename
 
 def main(config):
     # Setup.
+    experiment = Experiment(workspace='deepozean', project_name='bear', api_key=open(f'../API_keys/comet-ml', 'r').read())
+    experiment.log_parameters(config)
+
     time_stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     if config['general']['out_folder'] == 'TEST':
         out_folder = os.path.join(resource_filename('bear_model', 'models/'),
@@ -123,7 +127,7 @@ def main(config):
         (params, h_signed, ar_func) = bear_net.train(
             data_train, num_kmers, epochs, ds_loc, alphabet, lag, make_ar_func, af_kwargs,
             learning_rate, optimizer_name, train_ar=train_ar, acc_steps=acc_steps,
-            params_restart=params_restart, writer=writer, loss_save=loss_save, dtype=dtype)
+            params_restart=params_restart, writer=writer, loss_save=loss_save, dtype=dtype, experiment=experiment)
 
         # plot training curve
         plt.figure(figsize=[10, 10])

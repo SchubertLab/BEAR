@@ -14,6 +14,7 @@ import platform
 parser = argparse.ArgumentParser()
 parser.add_argument('--lags', type=int, default=5)
 parser.add_argument('--dataset', type=str, default='uniref90_humans')
+parser.add_argument('--train_val', action='store_true', default=False)
 args = parser.parse_args()
 
 lags = args.lags
@@ -24,7 +25,10 @@ amino_acid_idx = OrderedDict({k: v for v, k in enumerate(amino_acids)})
 fdists = OrderedDict()
 fdists_plus_1 = OrderedDict()
 df_transition_matrices = OrderedDict()
-sets = ['train_val', 'test']
+if args.train_val:
+	sets = ['train', 'val']
+else:
+	sets = ['train_val', 'test']
 
 for lag in tqdm(range(1, lags)):
 	for set in sets:
@@ -64,12 +68,13 @@ for lag in tqdm(range(1, lags)):
 	transition_matrices = result.to_numpy(dtype=int)
 	transition_matrices = np.array([transition_matrices[:, i*len(amino_acids):(i+1)*len(amino_acids)] for i in range(len(sets))]).swapaxes(0, 1).tolist()
 
+	train_val = 'train_val_' if args.train_val else ''
 	# Reset
-	f = open(f'data/{dataset}_transition_count_lag_{lag}.tsv', 'w')
+	f = open(f'data/{dataset}_transition_count_{train_val}lag_{lag}.tsv', 'w')
 	f.write('')
 
 	# Write
-	f = open(f'data/{dataset}_transition_count_lag_{lag}.tsv', 'a')
+	f = open(f'data/{dataset}_transition_count_{train_val}lag_{lag}.tsv', 'a')
 	ngrams_unified = result.index.tolist()
 	for ngram_, trans_mat in zip(ngrams_unified, transition_matrices):
 		f.write(ngram_ + '\t' + str(trans_mat) + '\n')
@@ -78,6 +83,6 @@ for lag in tqdm(range(1, lags)):
 	if 'bear_model' not in os.getcwd():
 		os.chdir('bear_model')
 	if platform.system() == 'Linux':
-		os.system(f'shuf data/{dataset}_transition_count_lag_{lag}.tsv -o data/{dataset}_transition_count_lag_{lag}_shuf.tsv')
+		os.system(f'shuf data/{dataset}_transition_count_{train_val}lag_{lag}.tsv -o data/{dataset}_transition_count_{train_val}lag_{lag}_shuf.tsv')
 	elif platform.system() == 'Darwin':
-		os.system(f'gshuf data/{dataset}_transition_count_lag_{lag}.tsv -o data/{dataset}_transition_count_lag_{lag}_shuf.tsv')
+		os.system(f'gshuf data/{dataset}_transition_count_{train_val}lag_{lag}.tsv -o data/{dataset}_transition_count_{train_val}lag_{lag}_shuf.tsv')

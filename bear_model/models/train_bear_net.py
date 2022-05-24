@@ -174,7 +174,8 @@ def main(config):
         config['results']['heldout_accuracy_BMM'] = json.dumps(acc_van.numpy().tolist())
         with open(os.path.join(out_folder, 'config.cfg'), 'w') as cw:
             config.write(cw)
-            
+
+    experiment.log_parameters(config)
     if config['test']['train_test']=='True':
         ds_loc_train = -1
         ds_loc_test = ds_loc
@@ -197,7 +198,8 @@ def main(config):
         config['results']['accuracy_BMM'] = json.dumps(acc_van.numpy().tolist())
         with open(os.path.join(out_folder, 'config.cfg'), 'w') as cw:
             config.write(cw)
-                        
+
+        experiment.log_parameters(config)
         # Return liks for testing
         return 1, ll_van.numpy(), perp_van.numpy()
 

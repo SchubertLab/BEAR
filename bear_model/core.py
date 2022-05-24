@@ -142,7 +142,7 @@ class tfpMultinomialPerm(tfpd.distribution.Distribution):
 alphabets_tf = {
     'prot': tf.convert_to_tensor(
         [b'A', b'R', b'N', b'D', b'C', b'E', b'Q', b'G', b'H', b'I', b'L',
-         b'K', b'M', b'F', b'P', b'S', b'T', b'W', b'Y', b'V', b'[']),
+         b'K', b'M', b'F', b'P', b'S', b'T', b'W', b'Y', b'V', b'[', b'X']),
     'dna': tf.convert_to_tensor([b'A', b'C', b'G', b'T', b'[']),
     'rna': tf.convert_to_tensor([b'A', b'C', b'G', b'U', b'['])}
 

@@ -1,3 +1,4 @@
+# python prepare_count_matrix.py --lags 21 --dataset imgt_I --train_val
 import nltk
 import re
 from Bio import SeqIO
@@ -12,8 +13,8 @@ import platform
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--lags', type=str, default=5)
-parser.add_argument('--dataset', type=str, default='uniref90_humans')
+parser.add_argument('--lags', type=int, default=5)
+parser.add_argument('--dataset', type=str, default='uniref90')
 parser.add_argument('--train_val', action='store_true')
 args = parser.parse_args()
 

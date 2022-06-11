@@ -175,7 +175,7 @@ def main(config):
         with open(os.path.join(out_folder, 'config.cfg'), 'w') as cw:
             config.write(cw)
 
-    experiment.log_parameters(config)
+    experiment.log_parameters(config['results'], prefix='results')
     if config['test']['train_test']=='True':
         ds_loc_train = -1
         ds_loc_test = ds_loc
@@ -199,7 +199,7 @@ def main(config):
         with open(os.path.join(out_folder, 'config.cfg'), 'w') as cw:
             config.write(cw)
 
-        experiment.log_parameters(config)
+        experiment.log_parameters(config['results'], prefix='results')
         # Return liks for testing
         return 1, ll_van.numpy(), perp_van.numpy()
 
@@ -207,11 +207,22 @@ def main(config):
 
 
 if __name__ == "__main__":
+    print('#'*2000)
+    print('#'*2000)
+    print('#'*2000)
     parser = argparse.ArgumentParser()
     parser.add_argument('configPath')
+    parser.add_argument('--lag', type=str, default=None)
+    parser.add_argument('--dataset', type=str, default=None)
+    parser.add_argument('--train_val', action='store_true')
     args = parser.parse_args()
 
     config = configparser.ConfigParser()
     config.read(args.configPath)
+
+    if args.lag is not None:
+        config['hyperp']['lag'] = args.lag
+    if args.dataset is not None:
+        config['data']['start_token'] = f'{args.dataset}_transition_count_{"train_val_" if args.train_val else ""}lag_{args.lag}_shuf.tsv'
 
     main(config)

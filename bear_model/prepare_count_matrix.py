@@ -85,5 +85,7 @@ for lag in tqdm(range(1, lags)):
 		os.chdir('bear_model')
 	if platform.system() == 'Linux':
 		os.system(f'shuf data/{dataset}_transition_count_{train_val}lag_{lag}.tsv -o data/{dataset}_transition_count_{train_val}lag_{lag}_shuf.tsv')
+		os.remove(f'data/{dataset}_transition_count_{train_val}lag_{lag}.tsv')
 	elif platform.system() == 'Darwin':
 		os.system(f'gshuf data/{dataset}_transition_count_{train_val}lag_{lag}.tsv -o data/{dataset}_transition_count_{train_val}lag_{lag}_shuf.tsv')
+		os.remove(f'data/{dataset}_transition_count_{train_val}lag_{lag}.tsv')
